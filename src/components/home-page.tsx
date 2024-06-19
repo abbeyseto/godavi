@@ -4,8 +4,8 @@
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
 
-"use client"
-require('dotenv').config();
+"use client";
+require("dotenv").config();
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -21,25 +21,29 @@ import {
   MenubarTrigger,
 } from "@/components/ui/menubar";
 import { Textarea } from "@/components/ui/textarea";
-import React, { useEffect, useState } from 'react';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import React, { useEffect, useState } from "react";
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+import { getProducts, getCategories } from "../../sanity/queries";
+import { urlForImage } from "../../sanity/lib/image";
 
 const containerStyle = {
-  width: '100%',
-  height: '400px'
+  width: "100%",
+  height: "400px",
 };
 
 const defaultCenter = {
   lat: 40.748817,
-  lng: -73.985428
+  lng: -73.985428,
 };
 
 const getCoordinates = async (address: string | number | boolean) => {
-  const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`);
+  const response = await fetch(
+    `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
+  );
   const data = await response.json();
   if (data.results.length > 0) {
     const { lat, lng } = data.results[0].geometry.location;
-    console.log(data.results)
+    console.log(data.results);
     return { lat, lng };
   }
   return null;
@@ -61,18 +65,42 @@ const Map = ({ apiKey, address }: any) => {
 
   return (
     <LoadScript googleMapsApiKey={apiKey}>
-      <GoogleMap
-        mapContainerStyle={containerStyle}
-        center={center}
-        zoom={14}
-      >
+      <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={14}>
         <Marker position={center} />
       </GoogleMap>
     </LoadScript>
   );
 };
 
+// Define the types for your products and categories
+interface Product {
+  _id: number;
+  title: string;
+  description: string;
+  images: any;
+  price: number;
+}
+
+interface Category {
+  id: number;
+  name: string;
+}
+
 export function HomePage() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const get_products = await getProducts();
+      console.log(get_products);
+      const get_categories = await getCategories();
+      setProducts(get_products);
+      setCategories(get_categories);
+    }
+    fetchData();
+  }, []);
+
   return (
     <div className="flex flex-col min-h-[100dvh]">
       <header className="bg-gray-900 text-white py-4 px-6 md:px-12 flex items-center justify-between">
@@ -98,44 +126,42 @@ export function HomePage() {
           </Link>
         </nav>
         <div className="md:hidden">
-      
-            <Menubar>
-              <MenubarMenu>
-                <MenubarTrigger>
-                  <MenuIcon className="h-6 w-6 text-gray-900" />
-                </MenubarTrigger>
-                <MenubarContent>
-                  <MenubarItem>
-                    <Link className="hover:underline" href="#">
-                      Home
-                    </Link>
-                  </MenubarItem>
-                  <MenubarItem>
-                    <Link className="hover:underline" href="#">
-                      Store
-                    </Link>
-                  </MenubarItem>
-                  <MenubarItem>
-                    {" "}
-                    <Link className="hover:underline" href="#">
-                      About
-                    </Link>
-                  </MenubarItem>
-                  <MenubarSeparator />
-                  <MenubarItem>
-                    <Link className="hover:underline" href="#">
-                      Our Services
-                    </Link>
-                  </MenubarItem>
-                  <MenubarItem>
-                    <Link className="hover:underline" href="#">
-                      Contact
-                    </Link>
-                  </MenubarItem>
-                </MenubarContent>
-              </MenubarMenu>
-            </Menubar>
-          
+          <Menubar>
+            <MenubarMenu>
+              <MenubarTrigger>
+                <MenuIcon className="h-6 w-6 text-gray-900" />
+              </MenubarTrigger>
+              <MenubarContent>
+                <MenubarItem>
+                  <Link className="hover:underline" href="#">
+                    Home
+                  </Link>
+                </MenubarItem>
+                <MenubarItem>
+                  <Link className="hover:underline" href="#">
+                    Store
+                  </Link>
+                </MenubarItem>
+                <MenubarItem>
+                  {" "}
+                  <Link className="hover:underline" href="#">
+                    About
+                  </Link>
+                </MenubarItem>
+                <MenubarSeparator />
+                <MenubarItem>
+                  <Link className="hover:underline" href="#">
+                    Our Services
+                  </Link>
+                </MenubarItem>
+                <MenubarItem>
+                  <Link className="hover:underline" href="#">
+                    Contact
+                  </Link>
+                </MenubarItem>
+              </MenubarContent>
+            </MenubarMenu>
+          </Menubar>
         </div>
       </header>
       <main className="flex-1">
@@ -309,78 +335,33 @@ export function HomePage() {
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              <Card>
-                <Image
-                  alt="Product 1"
-                  className="rounded-t-lg w-full"
-                  height="300"
-                  src="/placeholder.svg"
-                  width="300"
-                />
-                <CardContent className="p-4 space-y-2">
-                  <h3 className="text-xl font-bold">Product 1</h3>
-                  <p className="text-gray-600">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  </p>
-                  <div className="flex justify-between items-center">
-                    <span className="font-bold text-blue-500">$49.99</span>
-                    <Link
-                      className="inline-flex h-8 items-center justify-center rounded-md bg-blue-500 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-blue-600 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-950 disabled:pointer-events-none disabled:opacity-50"
-                      href="#"
-                    >
-                      Add to Cart
-                    </Link>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card>
-                <Image
-                  alt="Product 2"
-                  className="rounded-t-lg w-full"
-                  height="300"
-                  src="/placeholder.svg"
-                  width="300"
-                />
-                <CardContent className="p-4 space-y-2">
-                  <h3 className="text-xl font-bold">Product 2</h3>
-                  <p className="text-gray-600">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  </p>
-                  <div className="flex justify-between items-center">
-                    <span className="font-bold text-blue-500">$29.99</span>
-                    <Link
-                      className="inline-flex h-8 items-center justify-center rounded-md bg-blue-500 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-blue-600 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-950 disabled:pointer-events-none disabled:opacity-50"
-                      href="#"
-                    >
-                      Add to Cart
-                    </Link>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card>
-                <Image
-                  alt="Product 3"
-                  className="rounded-t-lg w-full"
-                  height="300"
-                  src="/placeholder.svg"
-                  width="300"
-                />
-                <CardContent className="p-4 space-y-2">
-                  <h3 className="text-xl font-bold">Product 3</h3>
-                  <p className="text-gray-600">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  </p>
-                  <div className="flex justify-between items-center">
-                    <span className="font-bold text-blue-500">$39.99</span>
-                    <Link
-                      className="inline-flex h-8 items-center justify-center rounded-md bg-blue-500 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-blue-600 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-950 disabled:pointer-events-none disabled:opacity-50"
-                      href="#"
-                    >
-                      Add to Cart
-                    </Link>
-                  </div>
-                </CardContent>
-              </Card>
+              {products.map((product) => (
+                <Card key={product._id}>
+                  <Image
+                    alt={product.title}
+                    className="rounded-t-lg w-full"
+                    height="300"
+                    src={urlForImage(product.images[0]) ??  ""} // Assuming each product has an image property
+                    width="300"
+                  />
+                  <CardContent className="p-4 space-y-2">
+                    <h3 className="text-xl font-bold">{product.title}</h3>
+                    <p className="text-gray-600">{product.description.slice(0, 120)} . . .</p>
+                    <div className="flex justify-between items-center">
+                      <span className="font-bold text-blue-500">
+                        ${product.price}
+                      </span>{" "}
+                      {/* Assuming each product has a price property */}
+                      <Link
+                        className="inline-flex h-8 items-center justify-center rounded-md bg-blue-500 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-blue-600 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-950 disabled:pointer-events-none disabled:opacity-50"
+                        href="#"
+                      >
+                        Add to Cart
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </div>
         </section>
@@ -421,7 +402,10 @@ export function HomePage() {
                 </div>
               </div>
               <div className="pt-4">
-                <Map apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY} address="24 Alowonle Adio St Lagos, Nigeria" />
+                <Map
+                  apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
+                  address="24 Alowonle Adio St Lagos, Nigeria"
+                />
               </div>
             </div>
             <form className="bg-gray-100 p-6 rounded-lg shadow-md">
