@@ -23,8 +23,8 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import React, { useEffect, useState } from "react";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
-import { getProducts, getCategories } from "../../sanity/queries";
 import { urlForImage } from "../../sanity/lib/image";
+import { Product } from "@/lib/typings";
 
 const containerStyle = {
   width: "100%",
@@ -43,7 +43,6 @@ const getCoordinates = async (address: string | number | boolean) => {
   const data = await response.json();
   if (data.results.length > 0) {
     const { lat, lng } = data.results[0].geometry.location;
-    console.log(data.results);
     return { lat, lng };
   }
   return null;
@@ -55,7 +54,6 @@ const Map = ({ apiKey, address }: any) => {
   useEffect(() => {
     if (address) {
       getCoordinates(address).then((coords) => {
-        console.log(coords);
         if (coords) {
           setCenter(coords);
         }
@@ -72,31 +70,17 @@ const Map = ({ apiKey, address }: any) => {
   );
 };
 
-// Define the types for your products and categories
-interface Product {
-  _id: number;
-  title: string;
-  description: string;
-  images: any;
-  price: number;
-}
-
-interface Category {
-  id: number;
-  name: string;
-}
-
 export function HomePage() {
   const [products, setProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
     async function fetchData() {
-      const get_products = await getProducts();
+      const get_products = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/products`
+      );
       console.log(get_products);
-      const get_categories = await getCategories();
-      setProducts(get_products);
-      setCategories(get_categories);
+      const get_products_data = await get_products.json();
+      setProducts(get_products_data.products);
     }
     fetchData();
   }, []);
