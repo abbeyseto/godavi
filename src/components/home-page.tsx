@@ -25,6 +25,15 @@ import React, { useEffect, useState } from "react";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { urlForImage } from "../../sanity/lib/image";
 import { Product } from "@/lib/typings";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+type Inputs = {
+  name: string;
+  email: string;
+  company: string;
+  phone: string;
+  message: string;
+};
 
 const containerStyle = {
   width: "100%",
@@ -72,6 +81,55 @@ const Map = ({ apiKey, address }: any) => {
 
 export function HomePage() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [submitting, setSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [failureMessage, setFailureMessage] = useState("");
+  const { register, handleSubmit, reset } = useForm<Inputs>();
+
+  const onSubmit: SubmitHandler<Inputs> = async (formData) => {
+    setSubmitting(true);
+    const to = "daniel.ameh@godavistore.com";
+    const subject = "Message from Godavi Store";
+    const text = formData.message;
+    const html = `<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Introduction Email</title>
+    </head>
+    <body>
+        
+        <p>Hi Godavi Store,</p>
+        
+        <p>You just recieved a message from <strong>${formData.name}</strong>. They've sent you a message from your website:</p>
+        
+        <h2>Message:</h2>
+        <p><strong>From:</strong> ${formData.name} &lt;${formData.email}&gt;</p>
+        <p><strong>Phone Number:</strong> ${formData.phone} </p>
+        <p><strong>Company Name:</strong> ${formData.company} </p>
+        <p><strong>Message:</strong> ${formData.message}</p>
+        
+        <p>Best regards,<br>
+        Your Name</p>
+        Godavi Notifications.
+    </body>
+    </html>`;
+
+    const emailStatus = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/sendemail`,
+      { method: "POST", body: JSON.stringify({ to, subject, text, html }) }
+    );
+    const data = await emailStatus.json();
+    console.log(data);
+    if (data.message.includes("success")) {
+      setSuccessMessage(data.message);
+      reset(); // Clear form fields
+    } else {
+      setFailureMessage(data.message);
+    }
+    setSubmitting(false);
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -325,12 +383,14 @@ export function HomePage() {
                     alt={product.title}
                     className="rounded-t-lg w-full"
                     height="300"
-                    src={urlForImage(product.images[0]) ??  ""} // Assuming each product has an image property
+                    src={urlForImage(product.images[0]) ?? ""} // Assuming each product has an image property
                     width="300"
                   />
                   <CardContent className="p-4 space-y-2">
                     <h3 className="text-xl font-bold">{product.title}</h3>
-                    <p className="text-gray-600">{product.description.slice(0, 120)} . . .</p>
+                    <p className="text-gray-600">
+                      {product.description.slice(0, 120)} . . .
+                    </p>
                     <div className="flex justify-between items-center">
                       <span className="font-bold text-blue-500">
                         ${product.price}
@@ -392,7 +452,10 @@ export function HomePage() {
                 />
               </div>
             </div>
-            <form className="bg-gray-100 p-6 rounded-lg shadow-md">
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="bg-gray-100 p-6 rounded-lg shadow-md"
+            >
               <h3 className="text-2xl font-bold mb-4">Get in Touch</h3>
               <div className="grid grid-cols-1 gap-4">
                 <div>
@@ -402,7 +465,13 @@ export function HomePage() {
                   >
                     Full Name
                   </label>
-                  <Input id="name" placeholder="Enter your name" type="text" />
+                  <Input
+                    {...register("name")}
+                    required
+                    id="name"
+                    placeholder="Enter your name"
+                    type="text"
+                  />
                 </div>
                 <div>
                   <label
@@ -412,6 +481,7 @@ export function HomePage() {
                     Company
                   </label>
                   <Input
+                    {...register("company")}
                     id="company"
                     placeholder="Enter your company"
                     type="text"
@@ -425,6 +495,8 @@ export function HomePage() {
                     Email
                   </label>
                   <Input
+                    {...register("email")}
+                    required
                     id="email"
                     placeholder="Enter your email"
                     type="email"
@@ -438,6 +510,7 @@ export function HomePage() {
                     Phone
                   </label>
                   <Input
+                    {...register("phone")}
                     id="phone"
                     placeholder="Enter your phone number"
                     type="text"
@@ -451,15 +524,32 @@ export function HomePage() {
                     Message
                   </label>
                   <Textarea
+                    {...register("message")}
                     id="message"
+                    required
                     placeholder="Enter your message"
                     rows={5}
                   />
                 </div>
-                <Button variant="default" size="default">
-                  Submit
+                <Button
+                  type="submit"
+                  variant="default"
+                  size="default"
+                  disabled={submitting}
+                >
+                  {submitting ? "Submitting..." : "Submit"}
                 </Button>
               </div>
+              {successMessage && (
+              <p className="text-green-900 text-md border-4 text-center py-3 md:py-5 px-10 rounded-lg border-lime-200 bg-green-100 font-semibold animate-pulse">
+                {successMessage}
+              </p>
+            )}
+            {failureMessage && (
+              <p className="text-red-900 text-md border-4 text-center py-3 md:py-5 px-10 rounded-lg border-orange-200 bg-red-100 p-4 font-semibold animate-pulse">
+                {failureMessage}
+              </p>
+            )}
             </form>
           </div>
         </section>
