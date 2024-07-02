@@ -65,11 +65,38 @@ export const schema: { types: SchemaTypeDefinition[] } = {
             },
           ],
         },
+        {
+          type: "reference",
+          name: "brand",
+          to: [
+            {
+              type: "brand",
+            },
+          ],
+        },
       ],
     },
     {
       type: "document",
       name: "category",
+      fields: [
+        {
+          type: "string",
+          name: "title",
+        },
+        {
+          type: "slug",
+          name: "slug",
+        },
+        {
+          type: "text",
+          name: "description",
+        },
+      ],
+    },
+    {
+      type: "document",
+      name: "brand",
       fields: [
         {
           type: "string",
