@@ -22,6 +22,11 @@ export const schema: { types: SchemaTypeDefinition[] } = {
           name: "description",
         },
         {
+          type: "boolean",
+          name: "featured",
+          title: "Is Featured Product?",
+        },
+        {
           type: "array",
           name: "body",
           title: "Main content",
@@ -91,6 +96,13 @@ export const schema: { types: SchemaTypeDefinition[] } = {
         {
           type: "text",
           name: "description",
+        },
+        {
+          type: "image",
+          name: "image",
+          options: {
+            hotspot: true,
+          },
         },
       ],
     },
