@@ -25,7 +25,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={comfortaa.variable}>
         <div className="min-h-screen flex flex-col">
-          <div className="bg-blue-900">
+          <div className="bg-black">
             <Header />
           </div>
           <main className="flex-grow">{children}</main>

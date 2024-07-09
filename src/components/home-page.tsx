@@ -23,9 +23,9 @@ import { Textarea } from "@/components/ui/textarea";
 import React, { useEffect, useState } from "react";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { urlForImage } from "../../sanity/lib/image";
-import { Product } from "@/lib/typings";
+import { Category, Product } from "@/lib/typings";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { ProductCategories } from "./product-categories";
+import ProductCategories from "./product-categories";
 import {
   PackageIcon,
   LightbulbIcon,
@@ -98,6 +98,7 @@ const Map = ({ apiKey, address }: any) => {
 
 export function HomePage() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [failureMessage, setFailureMessage] = useState("");
@@ -153,9 +154,12 @@ export function HomePage() {
       const get_products = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/products`
       );
-      console.log(get_products);
+      const get_categories = await fetch( `${process.env.NEXT_PUBLIC_BASE_URL}/api/categories`)
       const get_products_data = await get_products.json();
+      const get_categories_data = await get_categories.json();
+
       setProducts(get_products_data.products);
+      setCategories(get_categories_data.categories);
     }
     fetchData();
   }, []);
@@ -164,7 +168,7 @@ export function HomePage() {
     <div className="flex flex-col min-h-[100dvh] flex-grow">
       <div className="flex-1">
         <Hero/>
-        <ProductCategories />
+        <ProductCategories categories={categories} />
         <section className="bg-gray-100 py-20 px-6 md:px-12">
           <div className="max-w-5xl mx-auto space-y-8">
             <div className="text-center space-y-4">
@@ -175,7 +179,7 @@ export function HomePage() {
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {products.map((product) => (
+              {products.filter(product => product.featured === true).map((product) => (
                 <Card key={product._id}>
                   <Image
                     alt={product.title}
@@ -189,18 +193,17 @@ export function HomePage() {
                     <p className="text-gray-600">
                       {product.description.slice(0, 120)} . . .
                     </p>
-                    <div className="flex justify-between items-center">
-                      <span className="font-bold text-blue-500">
+                    {/* <div className="flex justify-between items-center">
+                      {/* <span className="font-bold text-blue-500">
                         ${product.price}
                       </span>{" "}
-                      {/* Assuming each product has a price property */}
                       <Link
                         className="inline-flex h-8 items-center justify-center rounded-md bg-blue-500 px-4 text-sm font-medium text-white shadow transition-colors hover:bg-blue-600 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-950 disabled:pointer-events-none disabled:opacity-50"
                         href="#"
                       >
                         Add to Cart
                       </Link>
-                    </div>
+                    </div> */}
                   </CardContent>
                 </Card>
               ))}
@@ -292,11 +295,11 @@ export function HomePage() {
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex items-center gap-2">
                   <PhoneIcon className="h-5 w-5 text-gray-500" />
-                  <span className="text-gray-600">+1 (555) 555-5555</span>
+                  <span className="text-gray-600">+19374890684</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <MailIcon className="h-5 w-5 text-gray-500" />
-                  <span className="text-gray-600">info@godavi.com</span>
+                  <span className="text-gray-600">info@godavistore.com</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Link className="hover:underline" href="#">
@@ -314,14 +317,14 @@ export function HomePage() {
                 <div className="flex items-center gap-2">
                   <LocateIcon className="h-5 w-5 text-gray-500" />
                   <span className="text-gray-600">
-                    123 Main St, Anytown USA 12345
+                    7801 Congress St, New Port Richey, Florida, 34653
                   </span>
                 </div>
               </div>
               <div className="pt-4">
                 <Map
                   apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
-                  address="24 Alowonle Adio St Lagos, Nigeria"
+                  address="7801 Congress St, New Port Richey, Florida, 34653"
                 />
               </div>
             </div>
@@ -434,7 +437,7 @@ export function HomePage() {
 export function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="bg-blue-900 text-white py-8 px-6 md:px-12">
+    <footer className="bg-black text-white py-8 px-6 md:px-12">
       <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
         <div className="flex items-center gap-2">
           <LogInIcon className="h-8 w-8" />
@@ -468,7 +471,7 @@ export function Footer() {
 
 export function Header() {
   return (
-    <header className="bg-blue-900 text-white py-4 px-6 md:px-12 flex items-center justify-between">
+    <header className="bg-black text-white py-4 px-6 md:px-12 flex items-center justify-between">
       <Link className="flex items-center gap-2" href="/">
         <LogInIcon className="h-8 w-8" />
         <span className="text-lg font-semibold">GODAVI</span>

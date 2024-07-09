@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useMemo, SVGProps } from "react";
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, useMemo, SVGProps, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -101,10 +102,25 @@ const AllProducts: Products[] = [
 ];
 
 export function ProductList() {
-
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [products, setProducts] = useState(AllProducts);
   const [selectedBrands, setSelectedBrands] = useState<number[]>([]);
   const [viewMode, setViewMode] = useState("grid");
+
+  useEffect(() => {
+    async function fetchData() {
+      console.log("Fetching data...");
+      console.log(searchParams);
+      const category = searchParams.get('category_id');
+      const get_products = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/products/${category}`
+      );
+      const get_products_data = await get_products.json();
+      setProducts(get_products_data.products);
+    }
+    fetchData();
+  }, [searchParams]);
 
   const handleBrandSelect = (brandId: number) => {
     if (selectedBrands.includes(brandId)) {
@@ -128,17 +144,6 @@ export function ProductList() {
         <h2 className="text-2xl font-bold">Filters</h2>
         <div className="grid gap-2">
           <h3 className="text-lg font-semibold">Brand</h3>
-          {/* <div className="grid gap-2">
-            {brands.map((brand) => (
-              <Label key={brand.id} className="flex items-center gap-2 font-normal">
-                <Checkbox
-                  checked={selectedBrands.includes(brand.id)}
-                  onCheckedChange={() => handleBrandSelect(brand.id)}
-                />
-                {brand.name}
-              </Label>
-            ))}
-          </div> */}
           <div className="grid gap-2">
             {/* Dropdown for small screens */}
             <div className="block md:hidden">

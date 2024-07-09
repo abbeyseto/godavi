@@ -16,3 +16,11 @@ export interface Product {
     price: number;
     featured: boolean;
   }
+
+  export interface Hero {
+    _id: string;
+    title: string;
+    subtitle: string;
+    imageUrl: string;
+    textPosition: string;
+  }

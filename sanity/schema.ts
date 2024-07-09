@@ -107,6 +107,49 @@ export const schema: { types: SchemaTypeDefinition[] } = {
       ],
     },
     {
+      name: 'heroCarousel',
+      title: 'Hero Carousel',
+      type: 'document',
+      fields: [
+        {
+          name: 'title',
+          title: 'Title',
+          type: 'string',
+          validation: Rule => Rule.required().error('A title is required')
+        },
+        {
+          name: 'subtitle',
+          title: 'Subtitle',
+          type: 'string'
+        },
+        {
+          name: 'landscapeImage',
+          title: 'Landscape Image',
+          type: 'image',
+          options: {
+            hotspot: true
+          },
+          validation: Rule => Rule.required().error('An image is required')
+        },
+        {
+          name: 'textPosition',
+          title: 'Text Position',
+          type: 'string',
+          options: {
+            list: [
+              { title: 'Top', value: 'top' },
+              { title: 'Bottom', value: 'bottom' },
+              { title: 'Left', value: 'left' },
+              { title: 'Right', value: 'right' },
+              { title: 'Center', value: 'center' }
+            ],
+            layout: 'radio'
+          },
+          validation: Rule => Rule.required().error('Text position is required')
+        }
+      ]
+    },
+    {
       type: "document",
       name: "brand",
       fields: [
