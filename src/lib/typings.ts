@@ -1,7 +1,11 @@
 
 export interface Category {
-    id: number;
-    name: string;
+    _id: string;
+    title: string;
+    slug: {
+      current: string;
+    }
+    imageUrl: string;
   }
 
 export interface Product {
@@ -10,4 +14,5 @@ export interface Product {
     description: string;
     images: any;
     price: number;
+    featured: boolean;
   }
