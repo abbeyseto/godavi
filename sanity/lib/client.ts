@@ -5,7 +5,6 @@ import { apiVersion, dataset, projectId, useCdn } from '../env'
 export const client = createClient({
   projectId,
   dataset,
-  apiVersion,
+  apiVersion: 'v1',
   useCdn,
-  perspective: 'published',
 })

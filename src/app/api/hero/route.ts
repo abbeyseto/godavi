@@ -16,5 +16,6 @@ const query = groq`
     }
 `;
   const hero: Hero[] = await client.fetch(query);
+  console.log(hero);
   return NextResponse.json({ hero });
 }
