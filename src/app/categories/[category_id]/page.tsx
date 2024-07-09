@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { urlForImage } from "../../../../sanity/lib/image";
+import { GetStaticProps } from "next";
 
 interface Products {
   _id: number;
@@ -41,7 +42,6 @@ export default function ProductList() {
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/products/${category_id}`
       );
       const get_products_data = await get_products.json();
-      console.log(get_products_data);
       setProducts(get_products_data.products);
       // Extract unique brands and categories
       const products = get_products_data.products;

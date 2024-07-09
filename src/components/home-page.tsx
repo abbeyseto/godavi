@@ -152,9 +152,13 @@ export function HomePage() {
   useEffect(() => {
     async function fetchData() {
       const get_products = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/products`
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/products`,
+        { next: { revalidate: 30 } }
       );
-      const get_categories = await fetch( `${process.env.NEXT_PUBLIC_BASE_URL}/api/categories`)
+      const get_categories = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/categories`,
+        { next: { revalidate: 30 } }
+      );
       const get_products_data = await get_products.json();
       const get_categories_data = await get_categories.json();
 
@@ -167,7 +171,7 @@ export function HomePage() {
   return (
     <div className="flex flex-col min-h-[100dvh] flex-grow">
       <div className="flex-1">
-        <Hero/>
+        <Hero />
         <ProductCategories categories={categories} />
         <section className="bg-gray-100 py-20 px-6 md:px-12">
           <div className="max-w-5xl mx-auto space-y-8">
@@ -179,21 +183,23 @@ export function HomePage() {
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {products.filter(product => product.featured === true).map((product) => (
-                <Card key={product._id}>
-                  <Image
-                    alt={product.title}
-                    className="rounded-t-lg w-full"
-                    height="300"
-                    src={urlForImage(product.images[0]) ?? ""} // Assuming each product has an image property
-                    width="300"
-                  />
-                  <CardContent className="p-4 space-y-2">
-                    <h3 className="text-xl font-bold">{product.title}</h3>
-                    <p className="text-gray-600">
-                      {product.description.slice(0, 120)} . . .
-                    </p>
-                    {/* <div className="flex justify-between items-center">
+              {products
+                .filter((product) => product.featured === true)
+                .map((product) => (
+                  <Card key={product._id}>
+                    <Image
+                      alt={product.title}
+                      className="rounded-t-lg w-full"
+                      height="300"
+                      src={urlForImage(product.images[0]) ?? ""} // Assuming each product has an image property
+                      width="300"
+                    />
+                    <CardContent className="p-4 space-y-2">
+                      <h3 className="text-xl font-bold">{product.title}</h3>
+                      <p className="text-gray-600">
+                        {product.description?.slice(0, 120)} . . .
+                      </p>
+                      {/* <div className="flex justify-between items-center">
                       {/* <span className="font-bold text-blue-500">
                         ${product.price}
                       </span>{" "}
@@ -204,9 +210,9 @@ export function HomePage() {
                         Add to Cart
                       </Link>
                     </div> */}
-                  </CardContent>
-                </Card>
-              ))}
+                    </CardContent>
+                  </Card>
+                ))}
             </div>
           </div>
         </section>

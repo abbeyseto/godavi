@@ -114,7 +114,7 @@ export function ProductList() {
       console.log(searchParams);
       const category = searchParams.get('category_id');
       const get_products = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/products/${category}`
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/products/${category}`, { next: { revalidate: 30 }}
       );
       const get_products_data = await get_products.json();
       setProducts(get_products_data.products);

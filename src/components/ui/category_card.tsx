@@ -46,8 +46,8 @@ const CategoryCard: React.FC<ProductCategoriesProps> = ({ category }) => {
           className="absolute inset-0 opacity-20 group-hover:opacity-0 transition-opacity duration-300"
           style={{ backgroundColor: bgColor }}
         ></div>
-        <div className="absolute inset-0 bg-black/5 group-hover:bg-black/70 transition-all duration-100 text-black group-hover:text-white p-6 flex flex-col justify-end group-hover:justify-center transform group-hover:transform-none">
-          <h3 className="font-semibold text-lg tracking-tight text-center transition-colors duration-100 mt-4 group-hover:mt-0">
+        <div className="absolute inset-0 bg-black/5 group-hover:bg-black/70 transition-all duration-100 text-black group-hover:text-white p-2 flex flex-col justify-end group-hover:justify-center transform group-hover:transform-none">
+          <h3 className="font-semibold text-lg tracking-tight text-center transition-colors duration-100">
             {category.title}
           </h3>
         </div>

@@ -5,8 +5,8 @@ import { client } from "../../../../../sanity/lib/client";
 // Define a function to handle the GET request
 export async function GET(request: any) {
   console.log(request.url);
-  const category_id  = request.url.split('/').pop();
-
+  const category_id = request.url.split("/").pop();
+  const timestamp = new Date().getTime();
   // Construct the GROQ query
   const queryCategory = groq`
     *[_type == 'product' && category->slug.current == '${category_id}']{
@@ -64,8 +64,11 @@ export async function GET(request: any) {
     }
   `;
   // Fetch the products from Sanity
-  const products = category_id === 'all'? await client.fetch(queryAll): await client.fetch(queryCategory);
-  // console.log(products);
+  const products =
+    category_id === "all"
+      ? await client.fetch(queryAll, {}, { next: { revalidate: 30 } })
+      : await client.fetch(queryCategory, {}, { next: { revalidate: 30 } });
+  console.log(products);
   // Return the products as a JSON response
   return NextResponse.json({ products });
 }
