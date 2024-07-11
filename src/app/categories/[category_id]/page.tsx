@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { urlForImage } from "../../../../sanity/lib/image";
-import { GetStaticProps } from "next";
 
 interface Products {
   _id: number;
@@ -20,7 +19,7 @@ interface Products {
 }
 
 interface Brands {
-  id: number;
+  id: string;
   name: string;
 }
 
@@ -31,7 +30,7 @@ export default function ProductList() {
   const [products, setProducts] = useState<Products[]>([]);
   const [brands, setBrands] = useState<Brands[]>([]);
   const [categories, setCategories] = useState([]);
-  const [selectedBrands, setSelectedBrands] = useState<number[]>([]);
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState("grid");
 
   useEffect(() => {
@@ -87,7 +86,7 @@ export default function ProductList() {
     fetchData();
   }, [params]);
 
-  const handleBrandSelect = (brandId: number) => {
+  const handleBrandSelect = (brandId: string) => {
     if (selectedBrands.includes(brandId)) {
       setSelectedBrands(selectedBrands.filter((id) => id !== brandId));
     } else {
@@ -100,7 +99,7 @@ export default function ProductList() {
       selectedBrands.length === 0
         ? true
         : selectedBrands.includes(
-            brands.find((brand) => brand.name === product.brand?.title)?.id ?? -1
+            brands.find((brand) => brand.name === product.brand?.title)?.id ?? ""
           )
     );
   }, [brands, products, selectedBrands]);
@@ -116,12 +115,8 @@ export default function ProductList() {
               <div className="block md:hidden">
                 <select
                   multiple
-                  onChange={(e) => {
-                    const selectedOptions = Array.from(
-                      e.target.selectedOptions,
-                      (option) => parseInt(option.value)
-                    );
-                    setSelectedBrands(selectedOptions);
+                  onClick={(e) => {
+                    handleBrandSelect(e.currentTarget.value);
                   }}
                   className="border rounded p-2 w-full"
                 >
