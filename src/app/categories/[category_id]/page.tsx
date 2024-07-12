@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { urlForImage } from "../../../../sanity/lib/image";
+import LoadingSpinner from "@/components/ui/loader";
 
 interface Products {
   _id: number;
@@ -29,6 +30,7 @@ export default function ProductList() {
   const params = useParams();
   const [products, setProducts] = useState<Products[]>([]);
   const [brands, setBrands] = useState<Brands[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [categories, setCategories] = useState([]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState("grid");
@@ -82,6 +84,7 @@ export default function ProductList() {
       console.log(uniqueBrands, uniqueCategories);
       setBrands(uniqueBrands);
       setCategories(uniqueCategories);
+      setIsLoaded(true);
     }
     fetchData();
   }, [params]);
@@ -99,7 +102,8 @@ export default function ProductList() {
       selectedBrands.length === 0
         ? true
         : selectedBrands.includes(
-            brands.find((brand) => brand.name === product.brand?.title)?.id ?? ""
+            brands.find((brand) => brand.name === product.brand?.title)?.id ??
+              ""
           )
     );
   }, [brands, products, selectedBrands]);
@@ -169,7 +173,8 @@ export default function ProductList() {
             </Button>
           </div>
         </div>
-        {products.length > 0 ? (
+        {!isLoaded && <LoadingSpinner />}
+        {products.length > 0 && isLoaded ? (
           viewMode === "grid" ? (
             <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {filteredProducts.map((product) => (
@@ -220,7 +225,26 @@ export default function ProductList() {
             </div>
           )
         ) : (
-          <h1>No product available</h1>
+          <div className="flex flex-col items-center justify-start min-h-screen text-center p-4">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-24 w-24 mb-4 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 12h6M9 16h6m-9 4h6a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2zm0 0H3m10-14h4a2 2 0 012 2v10a2 2 0 01-2 2h-4a2 2 0 01-2-2v-2m0-4V6m-4 4V6m-4 0V6"
+              />
+            </svg>
+            <h2 className="text-2xl font-bold mb-2">No Products Available</h2>
+            <p className="text-gray-500">
+              Check back later or try a different category.
+            </p>
+          </div>
         )}
       </div>
     </div>
