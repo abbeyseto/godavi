@@ -25,7 +25,7 @@ const CategoryCard: React.FC<ProductCategoriesProps> = ({ category }) => {
   return (
     <div
       key={category._id}
-      className="relative group overflow-hidden rounded-3xl"
+      className="relative group max-w-56 overflow-hidden rounded-3xl"
     >
       <Link
         href={`categories/${category.slug.current}`}
