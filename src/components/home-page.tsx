@@ -8,9 +8,7 @@
 require("dotenv").config();
 import Link from "next/link";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import { CardContent, Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import {
   Menubar,
   MenubarContent,
@@ -19,9 +17,7 @@ import {
   MenubarSeparator,
   MenubarTrigger,
 } from "@/components/ui/menubar";
-import { Textarea } from "@/components/ui/textarea";
 import React, { useEffect, useState } from "react";
-import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { urlForImage } from "../../sanity/lib/image";
 import { Category, Product } from "@/lib/typings";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -33,16 +29,18 @@ import {
   GlobeIcon,
   TargetIcon,
   ThumbsUpIcon,
-  PhoneIcon,
-  MailIcon,
-  FacebookIcon,
-  TwitterIcon,
-  InstagramIcon,
-  LocateIcon,
   LogInIcon,
   MenuIcon,
 } from "@/components/ui/icons";
 import { Hero } from "./hero";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
+import { SalesChannels } from "./sales-channels";
 
 type Inputs = {
   name: string;
@@ -52,102 +50,9 @@ type Inputs = {
   message: string;
 };
 
-const containerStyle = {
-  width: "100%",
-  height: "400px",
-};
-
-const defaultCenter = {
-  lat: 40.748817,
-  lng: -73.985428,
-};
-
-const getCoordinates = async (address: string | number | boolean) => {
-  const response = await fetch(
-    `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
-  );
-  const data = await response.json();
-  if (data.results.length > 0) {
-    const { lat, lng } = data.results[0].geometry.location;
-    return { lat, lng };
-  }
-  return null;
-};
-
-const Map = ({ apiKey, address }: any) => {
-  const [center, setCenter] = useState(defaultCenter);
-
-  useEffect(() => {
-    if (address) {
-      getCoordinates(address).then((coords) => {
-        if (coords) {
-          setCenter(coords);
-        }
-      });
-    }
-  }, [address]);
-
-  return (
-    <LoadScript googleMapsApiKey={apiKey}>
-      <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={14}>
-        <Marker position={center} />
-      </GoogleMap>
-    </LoadScript>
-  );
-};
-
 export function HomePage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [submitting, setSubmitting] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
-  const [failureMessage, setFailureMessage] = useState("");
-  const { register, handleSubmit, reset } = useForm<Inputs>();
-
-  const onSubmit: SubmitHandler<Inputs> = async (formData) => {
-    setSubmitting(true);
-    const to = "daniel.ameh@godavistore.com";
-    const subject = "Message from Godavi Store";
-    const text = formData.message;
-    const html = `<!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Introduction Email</title>
-    </head>
-    <body>
-        
-        <p>Hi Godavi Store,</p>
-        
-        <p>You just recieved a message from <strong>${formData.name}</strong>. They've sent you a message from your website:</p>
-        
-        <h2>Message:</h2>
-        <p><strong>From:</strong> ${formData.name} &lt;${formData.email}&gt;</p>
-        <p><strong>Phone Number:</strong> ${formData.phone} </p>
-        <p><strong>Company Name:</strong> ${formData.company} </p>
-        <p><strong>Message:</strong> ${formData.message}</p>
-        
-        <p>Best regards,<br>
-        Your Name</p>
-        Godavi Notifications.
-    </body>
-    </html>`;
-
-    const emailStatus = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/sendemail`,
-      { method: "POST", body: JSON.stringify({ to, subject, text, html }) }
-    );
-    const data = await emailStatus.json();
-    console.log(data);
-    if (data.message.includes("success")) {
-      setSuccessMessage(data.message);
-      reset(); // Clear form fields
-    } else {
-      setFailureMessage(data.message);
-    }
-    setSubmitting(false);
-  };
 
   useEffect(() => {
     async function fetchData() {
@@ -170,6 +75,41 @@ export function HomePage() {
 
   return (
     <div className="flex flex-col min-h-[100dvh] flex-grow">
+      <section className="w-full sticky top-0 z-50 bg-white">
+        <div className="container px-4 md:px-6 py-1 flex items-center justify-between">
+          <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="text-md text-base font-bold">
+                  CATEGORIES
+                </NavigationMenuTrigger>
+                <NavigationMenuContent className="w-[600px]">
+                  {categories &&
+                    categories.length > 0 &&
+                    categories.map((category) => (
+                      <NavigationMenuItem key={category._id}>
+                        <Link
+                          href={`/categories/${category.slug.current}`}
+                          className="flex w-[300px] py-2 items-center gap-2"
+                          prefetch={false}
+                        >
+                          <Image
+                            className="h-10 w-10 rounded-full"
+                            src={category.imageUrl}
+                            width={10}
+                            height={10}
+                            alt={category.title}
+                          />
+                          {category.title}
+                        </Link>
+                      </NavigationMenuItem>
+                    ))}
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
+      </section>
       <div className="flex-1">
         <Hero />
         <ProductCategories categories={categories} />
@@ -182,23 +122,24 @@ export function HomePage() {
                 needs.
               </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
               {products
                 .filter((product) => product.featured === true)
                 .map((product) => (
-                  <Card key={product._id}>
-                    <Image
-                      alt={product.title}
-                      className="rounded-t-lg w-full"
-                      height="300"
-                      src={urlForImage(product.images[0]) ?? ""} // Assuming each product has an image property
-                      width="300"
-                    />
-                    <CardContent className="p-4 space-y-2">
+                  <Card key={product._id} className="p-4 max-w-60">
+                    <div className="relative w-full h-52">
+                      <Image
+                        alt={product.title}
+                        className="object-cover" // or "object-cover"
+                        layout="fill"
+                        src={urlForImage(product.images[0]) ?? ""}
+                      />
+                    </div>
+                    <CardContent className="p-2 space-y-2">
                       <h3 className="text-xl font-bold">{product.title}</h3>
-                      <p className="text-gray-600">
+                      {/* <p className="text-gray-600">
                         {product.description?.slice(0, 120)} . . .
-                      </p>
+                      </p> */}
                       {/* <div className="flex justify-between items-center">
                       {/* <span className="font-bold text-blue-500">
                         ${product.price}
@@ -221,10 +162,10 @@ export function HomePage() {
             <div className="text-center space-y-4">
               <h2 className="text-3xl font-bold">Our Services</h2>
               <p className="text-gray-600">
-                Godavi offers a wide range of services to meet your needs.
+                Godavi LLC offers a wide range of services to meet your needs.
               </p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="space-y-4">
                 <PackageIcon className="h-12 w-12 text-blue-500" />
                 <h3 className="text-xl font-bold">
@@ -252,24 +193,16 @@ export function HomePage() {
                   We provide comprehensive logistics solutions to our customers.
                 </p>
               </div>
-              <div className="space-y-4">
-                <GlobeIcon className="h-12 w-12 text-blue-500" />
-                <h3 className="text-xl font-bold">Multi-Channel Sales</h3>
-                <p className="text-gray-600">
-                  We sell on multiple channels including Canada Walmart,
-                  international wholesale distribution to warehouses, and Amazon
-                  US.
-                </p>
-              </div>
             </div>
           </div>
         </section>
+        <SalesChannels/>
         <section className="bg-white py-20 px-6 md:px-12">
           <div className="max-w-5xl mx-auto space-y-8">
             <div className="text-center space-y-4">
               <h2 className="text-3xl font-bold">Our Mission</h2>
               <p className="text-gray-600">
-                Godavi is committed to achieving our mission.
+                Godavi LLC is committed to achieving our mission.
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -277,8 +210,8 @@ export function HomePage() {
                 <TargetIcon className="h-12 w-12 text-blue-500" />
                 <h3 className="text-xl font-bold">Enduring Business</h3>
                 <p className="text-gray-600">
-                  To establish Godavi as a successful and enduring business for
-                  generations to come.
+                  To establish Godavi LLC as a successful and enduring business
+                  for generations to come.
                 </p>
               </div>
               <div className="space-y-4">
@@ -289,150 +222,6 @@ export function HomePage() {
                 </p>
               </div>
             </div>
-          </div>
-        </section>
-        <section id="contact" className="bg-white py-20 px-6 md:px-12">
-          <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
-            <div className="space-y-4">
-              <h2 className="text-3xl font-bold">Contact Us</h2>
-              <p className="text-gray-600">
-                Have a question or feedback? We&apos;d love to hear from you.
-              </p>
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex items-center gap-2">
-                  <PhoneIcon className="h-5 w-5 text-gray-500" />
-                  <span className="text-gray-600">+19374890684</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <MailIcon className="h-5 w-5 text-gray-500" />
-                  <span className="text-gray-600">info@godavistore.com</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Link className="hover:underline" href="#">
-                    <FacebookIcon className="h-5 w-5 text-gray-500" />
-                  </Link>
-                  <Link className="hover:underline" href="#">
-                    <TwitterIcon className="h-5 w-5 text-gray-500" />
-                  </Link>
-                  <Link className="hover:underline" href="#">
-                    <InstagramIcon className="h-5 w-5 text-gray-500" />
-                  </Link>
-                </div>
-              </div>
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex items-center gap-2">
-                  <LocateIcon className="h-5 w-5 text-gray-500" />
-                  <span className="text-gray-600">
-                    7801 Congress St, New Port Richey, Florida, 34653
-                  </span>
-                </div>
-              </div>
-              <div className="pt-4">
-                <Map
-                  apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
-                  address="7801 Congress St, New Port Richey, Florida, 34653"
-                />
-              </div>
-            </div>
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className="bg-gray-100 p-6 rounded-lg shadow-md"
-            >
-              <h3 className="text-2xl font-bold mb-4">Get in Touch</h3>
-              <div className="grid grid-cols-1 gap-4">
-                <div>
-                  <label
-                    className="block text-gray-700 font-medium mb-2"
-                    htmlFor="name"
-                  >
-                    Full Name
-                  </label>
-                  <Input
-                    {...register("name")}
-                    required
-                    id="name"
-                    placeholder="Enter your name"
-                    type="text"
-                  />
-                </div>
-                <div>
-                  <label
-                    className="block text-gray-700 font-medium mb-2"
-                    htmlFor="company"
-                  >
-                    Company
-                  </label>
-                  <Input
-                    {...register("company")}
-                    id="company"
-                    placeholder="Enter your company"
-                    type="text"
-                  />
-                </div>
-                <div>
-                  <label
-                    className="block text-gray-700 font-medium mb-2"
-                    htmlFor="email"
-                  >
-                    Email
-                  </label>
-                  <Input
-                    {...register("email")}
-                    required
-                    id="email"
-                    placeholder="Enter your email"
-                    type="email"
-                  />
-                </div>
-                <div>
-                  <label
-                    className="block text-gray-700 font-medium mb-2"
-                    htmlFor="phone"
-                  >
-                    Phone
-                  </label>
-                  <Input
-                    {...register("phone")}
-                    id="phone"
-                    placeholder="Enter your phone number"
-                    type="text"
-                  />
-                </div>
-                <div>
-                  <label
-                    className="block text-gray-700 font-medium mb-2"
-                    htmlFor="message"
-                  >
-                    Message
-                  </label>
-                  <Textarea
-                    {...register("message")}
-                    id="message"
-                    required
-                    placeholder="Enter your message"
-                    rows={5}
-                  />
-                </div>
-                <Button
-                  type="submit"
-                  variant="default"
-                  size="default"
-                  disabled={submitting}
-                >
-                  {submitting ? "Submitting..." : "Submit"}
-                </Button>
-              </div>
-              {successMessage && (
-                <p className="text-green-900 text-md border-4 text-center py-3 md:py-5 px-10 rounded-lg border-lime-200 bg-green-100 font-semibold animate-pulse">
-                  {successMessage}
-                </p>
-              )}
-              {failureMessage && (
-                <p className="text-red-900 text-md border-4 text-center py-3 md:py-5 px-10 rounded-lg border-orange-200 bg-red-100 p-4 font-semibold animate-pulse">
-                  {failureMessage}
-                </p>
-              )}
-            </form>
           </div>
         </section>
       </div>
@@ -447,9 +236,9 @@ export function Footer() {
       <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
         <div className="flex items-center gap-2">
           <LogInIcon className="h-8 w-8" />
-          <span className="text-lg font-semibold">Godavi</span>
+          <span className="text-lg font-semibold">Godavi LLC</span>
         </div>
-        <nav className="flex items-center gap-6">
+        <nav className="flex items-center gap-4">
           <Link href="/" className="hover:underline" prefetch={false}>
             Home
           </Link>
@@ -463,12 +252,18 @@ export function Footer() {
           <Link href="/about" className="hover:underline" prefetch={false}>
             About
           </Link>
-          <Link href="/#contact" className="hover:underline" prefetch={false}>
+          <Link href="/contact" className="hover:underline" prefetch={false}>
             Contact
+          </Link>
+          <Link href="/legals/privacy-policy" className="hover:underline" prefetch={false}>
+            Privacy Policy
+          </Link>
+          <Link href="/legals/terms-of-service" className="hover:underline" prefetch={false}>
+            Terms of Service
           </Link>
         </nav>
         <p className="text-sm text-gray-400">
-          &copy; {year} Godavi. All rights reserved.
+          &copy; {year} Godavi LLC. All rights reserved.
         </p>
       </div>
     </footer>
@@ -480,7 +275,7 @@ export function Header() {
     <header className="bg-black text-white py-4 px-6 md:px-12 flex items-center justify-between">
       <Link className="flex items-center gap-2" href="/">
         <LogInIcon className="h-8 w-8" />
-        <span className="text-lg font-semibold">GODAVI</span>
+        <span className="text-lg font-semibold">Godavi LLC</span>
       </Link>
       <nav className="hidden md:flex items-center gap-6">
         <Link className="hover:underline" href="/">
@@ -495,7 +290,7 @@ export function Header() {
         <Link className="hover:underline" href="/#services">
           Our Services
         </Link>
-        <Link className="hover:underline" href="/#contact">
+        <Link className="hover:underline" href="/contact">
           Contact
         </Link>
       </nav>

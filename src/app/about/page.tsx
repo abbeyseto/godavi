@@ -1,3 +1,4 @@
+import { SalesChannels } from "@/components/sales-channels";
 import {
   GlobeIcon,
   LightbulbIcon,
@@ -13,22 +14,22 @@ import {
 export default function Home() {
   return (
     <div>
-      <section className="bg-white py-20 px-6 md:px-12">
+      <section className="bg-gray-100 py-20 px-6 md:px-12">
         <div className="max-w-5xl mx-auto space-y-8">
           <div className="text-center space-y-4">
-            <h2 className="text-3xl font-bold">About Godavi</h2>
+            <h2 className="text-3xl font-bold">About Godavi LLC</h2>
             <p className="text-gray-600">
-              Godavi, inspired and founded by college students, is an emerging
+              Godavi LLC, inspired and founded by college students, is an emerging
               online e-commerce enterprise dedicated to scaling and expanding
               through strategic partnerships and the reselling of established
               brand products.{" "}
             </p>
             <p className="text-gray-600">
-              Our mission is to establish Godavi as a successful and enduring
+              Our mission is to establish Godavi LLC as a successful and enduring
               business for generations to come, with a steadfast commitment to
               quality and customer satisfaction at the forefront of our
               expansion strategy. In addition to reselling renowned brands,
-              Godavi is also in the process of developing its innovative
+              Godavi LLC is also in the process of developing its innovative
               products to introduce to the global marketplace.
             </p>
             <p className="text-gray-600">
@@ -65,59 +66,51 @@ export default function Home() {
         </div>
       </section>
       <section id="services" className="bg-white py-20 px-6 md:px-12">
-        <div className="max-w-5xl mx-auto space-y-8">
-          <div className="text-center space-y-4">
-            <h2 className="text-3xl font-bold">Our Services</h2>
-            <p className="text-gray-600">
-              Godavi offers a wide range of services to meet your needs.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-4">
-              <PackageIcon className="h-12 w-12 text-blue-500" />
-              <h3 className="text-xl font-bold">
-                Reselling Established Brands
-              </h3>
+          <div className="max-w-5xl mx-auto space-y-8">
+            <div className="text-center space-y-4">
+              <h2 className="text-3xl font-bold">Our Services</h2>
               <p className="text-gray-600">
-                We specialize in reselling established brand products to our
-                customers.
+                Godavi LLC offers a wide range of services to meet your needs.
               </p>
             </div>
-            <div className="space-y-4">
-              <LightbulbIcon className="h-12 w-12 text-blue-500" />
-              <h3 className="text-xl font-bold">
-                Innovative Product Development
-              </h3>
-              <p className="text-gray-600">
-                We are developing innovative products for the global
-                marketplace.
-              </p>
-            </div>
-            <div className="space-y-4">
-              <TruckIcon className="h-12 w-12 text-blue-500" />
-              <h3 className="text-xl font-bold">Comprehensive Logistics</h3>
-              <p className="text-gray-600">
-                We provide comprehensive logistics solutions to our customers.
-              </p>
-            </div>
-            <div className="space-y-4">
-              <GlobeIcon className="h-12 w-12 text-blue-500" />
-              <h3 className="text-xl font-bold">Multi-Channel Sales</h3>
-              <p className="text-gray-600">
-                We sell on multiple channels including Canada Walmart,
-                international wholesale distribution to warehouses, and Amazon
-                US.
-              </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="space-y-4">
+                <PackageIcon className="h-12 w-12 text-blue-500" />
+                <h3 className="text-xl font-bold">
+                  Reselling Established Brands
+                </h3>
+                <p className="text-gray-600">
+                  We specialize in reselling established brand products to our
+                  customers.
+                </p>
+              </div>
+              <div className="space-y-4">
+                <LightbulbIcon className="h-12 w-12 text-blue-500" />
+                <h3 className="text-xl font-bold">
+                  Innovative Product Development
+                </h3>
+                <p className="text-gray-600">
+                  We are developing innovative products for the global
+                  marketplace.
+                </p>
+              </div>
+              <div className="space-y-4">
+                <TruckIcon className="h-12 w-12 text-blue-500" />
+                <h3 className="text-xl font-bold">Comprehensive Logistics</h3>
+                <p className="text-gray-600">
+                  We provide comprehensive logistics solutions to our customers.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      <SalesChannels/>
       <section className="bg-white py-20 px-6 md:px-12">
         <div className="max-w-5xl mx-auto space-y-8">
           <div className="text-center space-y-4">
             <h2 className="text-3xl font-bold">Our Mission</h2>
             <p className="text-gray-600">
-              Godavi is committed to achieving our mission.
+              Godavi LLC is committed to achieving our mission.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -125,7 +118,7 @@ export default function Home() {
               <TargetIcon className="h-12 w-12 text-blue-500" />
               <h3 className="text-xl font-bold">Enduring Business</h3>
               <p className="text-gray-600">
-                To establish Godavi as a successful and enduring business for
+                To establish Godavi LLC as a successful and enduring business for
                 generations to come.
               </p>
             </div>

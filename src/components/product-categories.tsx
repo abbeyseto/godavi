@@ -9,12 +9,12 @@ const ProductCategories: React.FC<ProductCategoriesProps> = ({
   categories,
 }) => {
   return (
-    <section className="w-full py-12 md:py-24 lg:py-32">
+    <section className="w-full py-10">
       <div className="flex items-center justify-center min-h-screen">
         <div className="container grid gap-6 md:gap-8 px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <div className="space-y-2">
-              <h2 className="text-2xl font-bold tracking-tighter sm:text-3xl md:text-4xl">
+              <h2 className="text-3xl font-bold">
                 Explore Our Product Categories
               </h2>
               <p className="max-w-[700px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
@@ -24,7 +24,7 @@ const ProductCategories: React.FC<ProductCategoriesProps> = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
             {categories.map((category) => (
               <CategoryCard key={category._id} category={category}/>
             ))}

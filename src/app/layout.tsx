@@ -5,7 +5,7 @@ import "./globals.css";
 import { Footer, Header } from "@/components/home-page";
 
 export const metadata: Metadata = {
-  title: "Godavi Store",
+  title: "Godavi LLC Store",
   description:
     "Emerging online e-commerce enterprise dedicated to scaling and expanding through strategic partnerships and the reselling of established brand products.",
 };

@@ -5,11 +5,13 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel";
+
 import Link from "next/link";
 import Image from "next/image";
 import { JSX, SVGProps, useEffect } from "react";
 import * as React from "react";
 import { Hero as HeroType } from "@/lib/typings";
+
 
 export function Hero() {
   const [carouselData, setCarouselData] = React.useState<HeroType[]>([]);

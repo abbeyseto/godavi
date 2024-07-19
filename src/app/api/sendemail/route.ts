@@ -9,7 +9,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
       // Construct Mailgun API request parameters
       const formData = new FormData();
-      formData.append('from', `Godavi Store Contact <${process.env.EMAIL_FROM}>`);
+      formData.append('from', `Godavi LLC Store Contact <${process.env.EMAIL_FROM}>`);
       formData.append('to', to);
       formData.append('subject', subject);
       formData.append('text', text);
