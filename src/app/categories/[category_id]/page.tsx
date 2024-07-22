@@ -76,7 +76,7 @@ export default function ProductList() {
           return acc;
         },
         []
-      );
+      ).sort((a: { name: string; }, b: { name: any; }) => a.name.localeCompare(b.name));
 
       const uniqueCategories = products.reduce(
         (
@@ -209,14 +209,14 @@ export default function ProductList() {
             <h2 className="text-2xl font-bold">Products</h2>
             <div className="flex items-center gap-4">
               <Button
-                variant={viewMode === "grid" ? "default" : "outline"}
+                variant={viewMode === "grid" ? "customDefault" : "customOutline"}
                 size="sm"
                 onClick={() => setViewMode("grid")}
               >
                 <LayoutGridIcon className="w-4 h-4" />
               </Button>
               <Button
-                variant={viewMode === "list" ? "default" : "outline"}
+                variant={viewMode === "list" ? "customDefault" : "customOutline"}
                 size="sm"
                 onClick={() => setViewMode("list")}
               >
@@ -242,8 +242,8 @@ export default function ProductList() {
                       />
                     </div>
                     <div className="p-4">
-                      <h3 className="text-lg font-semibold">{product.title}</h3>
-                      <p className="text-muted-foreground">
+                      <h3 className="text-lg text-center font-semibold">{product.title}</h3>
+                      <p className="text-gray-500 text-center">
                         {product.brand?.title}
                       </p>
                       {/* <p className="text-primary font-semibold">${product.price.toFixed(2)}</p> */}

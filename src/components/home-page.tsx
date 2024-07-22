@@ -65,6 +65,14 @@ export function HomePage() {
     fetchData();
   }, []);
 
+  // Utility function to generate a random pastel color
+  const generateRandomColor = () => {
+    const r = Math.floor(Math.random() * 156 + 100); // 100-255 for a pastel color
+    const g = Math.floor(Math.random() * 156 + 100);
+    const b = Math.floor(Math.random() * 156 + 100);
+    return `rgba(${r}, ${g}, ${b}, 0.4)`; // Adjust alpha for subtlety
+  };
+
   return (
     <div className="flex flex-col min-h-[100dvh] flex-grow">
       <section className="w-full sticky top-0 z-50 bg-white">
@@ -118,7 +126,7 @@ export function HomePage() {
               {products
                 .filter((product) => product.featured === true)
                 .map((product) => (
-                  <Card key={product._id} className="p-4 max-w-60">
+                  <Card key={product._id} className="relative p-4 max-w-60">
                     <div className="relative w-full h-52">
                       <Image
                         alt={product.title}
@@ -127,6 +135,10 @@ export function HomePage() {
                         src={urlForImage(product.images[0]) ?? ""}
                       />
                     </div>
+                    <div
+                      className="absolute inset-0 opacity-20 group-hover:opacity-0 transition-opacity duration-300"
+                      style={{ backgroundColor: generateRandomColor() }}
+                    ></div>
                     <CardContent className="p-2 space-y-2">
                       <h3 className="text-xl font-bold">{product.title}</h3>
                       {/* <p className="text-gray-600">
@@ -177,9 +189,7 @@ export function HomePage() {
               </div>
               <div className="space-y-4">
                 <LightbulbIcon className="h-12 w-12 text-blue-500" />
-                <h3 className="text-xl font-bold">
-                  Product Development
-                </h3>
+                <h3 className="text-xl font-bold">Product Development</h3>
                 <p className="text-gray-600">
                   We are developing innovative products for the global
                   marketplace.
@@ -188,7 +198,7 @@ export function HomePage() {
             </div>
           </div>
         </section>
-        <SalesChannels/>
+        <SalesChannels />
         <section className="bg-white py-20 px-6 md:px-12">
           <div className="max-w-5xl mx-auto space-y-8">
             <div className="text-center space-y-4">
@@ -247,10 +257,18 @@ export function Footer() {
           <Link href="/contact" className="hover:underline" prefetch={false}>
             Contact
           </Link>
-          <Link href="/legals/privacy-policy" className="hover:underline" prefetch={false}>
+          <Link
+            href="/legals/privacy-policy"
+            className="hover:underline"
+            prefetch={false}
+          >
             Privacy Policy
           </Link>
-          <Link href="/legals/terms-of-service" className="hover:underline" prefetch={false}>
+          <Link
+            href="/legals/terms-of-service"
+            className="hover:underline"
+            prefetch={false}
+          >
             Terms of Service
           </Link>
         </nav>

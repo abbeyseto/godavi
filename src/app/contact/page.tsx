@@ -75,8 +75,8 @@ export default function ContactPage() {
 
   const onSubmit: SubmitHandler<Inputs> = async (formData) => {
     setSubmitting(true);
-    const to = "daniel.ameh@Godavi LLCstore.com";
-    const subject = "Message from Godavi LLC Store";
+    const to = "daniel.ameh@godavistore.com";
+    const subject = "Message from Godavi Store";
     const text = formData.message;
     const html = `<!DOCTYPE html>
     <html lang="en">
@@ -87,7 +87,7 @@ export default function ContactPage() {
     </head>
     <body>
         
-        <p>Hi Godavi LLC Store,</p>
+        <p>Hi Godavi Store,</p>
         
         <p>You just recieved a message from <strong>${formData.name}</strong>. They've sent you a message from your website:</p>
         
@@ -134,7 +134,7 @@ export default function ContactPage() {
               </div>
               <div className="flex items-center gap-2">
                 <MailIcon className="h-5 w-5 text-red-500" />
-                <span className="text-gray-600">info@Godavistore.com</span>
+                <span className="text-gray-600">info@godavistore.com</span>
               </div>
             </div>
             <div className="flex items-center justify-evenly gap-4">
