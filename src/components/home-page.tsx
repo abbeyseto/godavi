@@ -42,14 +42,6 @@ import {
 } from "@/components/ui/navigation-menu";
 import { SalesChannels } from "./sales-channels";
 
-type Inputs = {
-  name: string;
-  email: string;
-  company: string;
-  phone: string;
-  message: string;
-};
-
 export function HomePage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -177,20 +169,20 @@ export function HomePage() {
                 </p>
               </div>
               <div className="space-y-4">
-                <LightbulbIcon className="h-12 w-12 text-blue-500" />
-                <h3 className="text-xl font-bold">
-                  Innovative Product Development
-                </h3>
-                <p className="text-gray-600">
-                  We are developing innovative products for the global
-                  marketplace.
-                </p>
-              </div>
-              <div className="space-y-4">
                 <TruckIcon className="h-12 w-12 text-blue-500" />
                 <h3 className="text-xl font-bold">Comprehensive Logistics</h3>
                 <p className="text-gray-600">
                   We provide comprehensive logistics solutions to our customers.
+                </p>
+              </div>
+              <div className="space-y-4">
+                <LightbulbIcon className="h-12 w-12 text-blue-500" />
+                <h3 className="text-xl font-bold">
+                  Product Development
+                </h3>
+                <p className="text-gray-600">
+                  We are developing innovative products for the global
+                  marketplace.
                 </p>
               </div>
             </div>
