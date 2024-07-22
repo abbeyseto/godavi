@@ -46,7 +46,6 @@ export default function ProductList() {
 
   useEffect(() => {
     async function fetchData() {
-      console.log("Fetching data...");
       const { category_id } = params;
       const get_products = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/products/${category_id}`
@@ -97,7 +96,6 @@ export default function ProductList() {
         },
         []
       );
-      console.log(uniqueBrands, uniqueCategories);
       setBrands(uniqueBrands);
       setIsLoaded(true);
     }

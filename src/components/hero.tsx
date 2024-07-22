@@ -22,7 +22,6 @@ export function Hero() {
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/hero`
       );
       const hero = await get_hero.json();
-      console.log(hero);
       setCarouselData(hero.hero);
     }
     fetchData();

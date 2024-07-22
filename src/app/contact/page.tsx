@@ -108,7 +108,6 @@ export default function ContactPage() {
       { method: "POST", body: JSON.stringify({ to, subject, text, html }) }
     );
     const data = await emailStatus.json();
-    console.log(data);
     if (data.message.includes("success")) {
       setSuccessMessage(data.message);
       reset(); // Clear form fields

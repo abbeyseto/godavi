@@ -23,8 +23,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
         },
         body: formData,
       });
-    //   const reply = await response.json();
-      console.log(response);
 
       if (response.status === 200) {
         // Return success response

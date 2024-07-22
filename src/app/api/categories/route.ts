@@ -19,6 +19,5 @@ export async function GET() {
     {},
     { next: { revalidate: 30 } }
   );
-  // console.log(categories);
   return NextResponse.json({ categories });
 }

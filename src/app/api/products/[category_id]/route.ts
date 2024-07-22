@@ -4,7 +4,6 @@ import { client } from "../../../../../sanity/lib/client";
 
 // Define a function to handle the GET request
 export async function GET(request: any) {
-  console.log(request.url);
   const category_id = request.url.split("/").pop();
   const timestamp = new Date().getTime();
   // Construct the GROQ query
@@ -68,7 +67,6 @@ export async function GET(request: any) {
     category_id === "all"
       ? await client.fetch(queryAll, {}, { next: { revalidate: 30 } })
       : await client.fetch(queryCategory, {}, { next: { revalidate: 30 } });
-  console.log(products);
   // Return the products as a JSON response
   return NextResponse.json({ products });
 }

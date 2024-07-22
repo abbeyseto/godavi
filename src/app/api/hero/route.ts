@@ -20,6 +20,5 @@ export async function GET() {
     {},
     { next: { revalidate: 30 } }
   );
-  // console.log(hero);
   return NextResponse.json({ hero });
 }
