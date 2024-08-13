@@ -94,10 +94,10 @@ export function HomePage() {
                           prefetch={false}
                         >
                           <Image
-                            className="h-10 w-10 rounded-full"
+                            className="h-8 w-8 rounded-full"
                             src={category.imageUrl}
-                            width={10}
-                            height={10}
+                            width={8}
+                            height={8}
                             alt={category.title}
                           />
                           {category.title}
@@ -127,12 +127,15 @@ export function HomePage() {
                 .filter((product) => product.featured === true)
                 .map((product) => (
                   <Card key={product._id} className="relative p-4 max-w-60">
-                    <div className="relative w-full h-52">
+                     <div
+                      className="relative"
+                    >
                       <Image
                         alt={product.title}
-                        className="object-cover" // or "object-cover"
-                        layout="fill"
-                        src={urlForImage(product.images[0]) ?? ""}
+                        className="w-auto h-full "
+                        width={200}
+                        height={200}
+                        src={product.images ?? ""}
                       />
                     </div>
                     <div

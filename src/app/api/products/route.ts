@@ -10,7 +10,7 @@ export async function GET() {
     _id,
     title,
     description,
-    images[],
+    'images':images[0].asset->url,
     price,
     featured,
 }

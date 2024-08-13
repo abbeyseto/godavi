@@ -46,9 +46,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
           of: [
             {
               type: "image",
-              options: {
-                hotspot: true,
-              },
             },
           ],
         },

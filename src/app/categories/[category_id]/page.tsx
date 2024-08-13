@@ -6,7 +6,7 @@ import { useState, useMemo, SVGProps, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { urlForImage } from "../../../../sanity/lib/image";
+import { urlForImage, urlForImage2 } from "../../../../sanity/lib/image";
 import LoadingSpinner from "@/components/ui/loader";
 import {
   NavigationMenu,
@@ -62,20 +62,24 @@ export default function ProductList() {
       // Extract unique brands and categories
       const products = get_products_data.products;
 
-      const uniqueBrands = products.reduce(
-        (
-          acc: { id: any; name: any }[],
-          product: { brand: { _id: any; title: any } }
-        ) => {
-          if (
-            !acc.find((brand: { id: any }) => brand.id === product.brand?._id)
-          ) {
-            acc.push({ id: product.brand?._id, name: product.brand?.title });
-          }
-          return acc;
-        },
-        []
-      ).sort((a: { name: string; }, b: { name: any; }) => a.name.localeCompare(b.name));
+      const uniqueBrands = products
+        .reduce(
+          (
+            acc: { id: any; name: any }[],
+            product: { brand: { _id: any; title: any } }
+          ) => {
+            if (
+              !acc.find((brand: { id: any }) => brand.id === product.brand?._id)
+            ) {
+              acc.push({ id: product.brand?._id, name: product.brand?.title });
+            }
+            return acc;
+          },
+          []
+        )
+        .sort((a: { name: string }, b: { name: any }) =>
+          a.name.localeCompare(b.name)
+        );
 
       const uniqueCategories = products.reduce(
         (
@@ -207,14 +211,18 @@ export default function ProductList() {
             <h2 className="text-2xl font-bold">Products</h2>
             <div className="flex items-center gap-4">
               <Button
-                variant={viewMode === "grid" ? "customDefault" : "customOutline"}
+                variant={
+                  viewMode === "grid" ? "customDefault" : "customOutline"
+                }
                 size="sm"
                 onClick={() => setViewMode("grid")}
               >
                 <LayoutGridIcon className="w-4 h-4" />
               </Button>
               <Button
-                variant={viewMode === "list" ? "customDefault" : "customOutline"}
+                variant={
+                  viewMode === "list" ? "customDefault" : "customOutline"
+                }
                 size="sm"
                 onClick={() => setViewMode("list")}
               >
@@ -229,18 +237,23 @@ export default function ProductList() {
                 {filteredProducts.map((product) => (
                   <div
                     key={product._id}
-                    className="bg-background rounded-lg overflow-hidden shadow-lg"
+                    className="rounded-lg shadow-lg"
                   >
-                    <div className="relative w-full h-52">
+                    <div
+                      className="relative"
+                    >
                       <Image
                         alt={product.title}
-                        className="object-contain" // or "object-cover"
-                        layout="fill"
-                        src={urlForImage(product.images[0]) ?? ""}
+                        className="w-auto h-full "
+                        width={200}
+                        height={200}
+                        src={product.images ?? ""}
                       />
                     </div>
                     <div className="p-4">
-                      <h3 className="text-lg text-center font-semibold">{product.title}</h3>
+                      <h3 className="text-lg text-center font-semibold">
+                        {product.title}
+                      </h3>
                       <p className="text-gray-500 text-center">
                         {product.brand?.title}
                       </p>
@@ -257,7 +270,7 @@ export default function ProductList() {
                     className="bg-background rounded-lg overflow-hidden shadow-lg flex items-center"
                   >
                     <Image
-                      src={urlForImage(product.images[0]) ?? ""}
+                      src={product.images ?? ""}
                       alt={product.title}
                       width={200}
                       height={200}

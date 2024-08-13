@@ -24,7 +24,7 @@ export async function GET(request: any) {
         _type,
         title,
         _updatedAt,
-        images,
+        'images':images[0].asset->url,
         category->{
           _id,
           title,
@@ -52,7 +52,7 @@ export async function GET(request: any) {
         _type,
         title,
         _updatedAt,
-        images,
+        'images':images[0].asset->url,
         category->{
           _id,
           title,
